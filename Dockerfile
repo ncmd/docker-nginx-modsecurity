@@ -174,6 +174,7 @@ RUN build_pkgs="alpine-sdk apr-dev apr-util-dev autoconf automake binutils-gold 
   apk del ${build_pkgs} && \
   apk add ${runtime_pkgs} && \
   apk add gcc make perl && \
+  apk add nodejs nodejs-npm && \
   cd /src/openssl-${OPENSSL_VERSION} && \
   make -j$(nproc) install && \
   if [ -f /usr/bin/openssl ]; then rm -f /usr/bin/openssl; fi && \
@@ -203,10 +204,13 @@ RUN build_pkgs="alpine-sdk apr-dev apr-util-dev autoconf automake binutils-gold 
   echo -e "\n\n** /etc/periodic/daily/certrenew\n" && \
   cat /etc/periodic/daily/certrenew
 
-EXPOSE 80 443
+RUN npm install -g cloudcmd
+
+EXPOSE 80 443 7000
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY certbot.default.sh /usr/local/sbin/
 COPY nginx.conf /etc/nginx/nginx.conf
 
 ENTRYPOINT ["docker-entrypoint.sh"]
+CMD cloudcmd --port 7000
