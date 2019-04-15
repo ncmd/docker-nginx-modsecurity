@@ -207,5 +207,6 @@ EXPOSE 80 443
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY certbot.default.sh /usr/local/sbin/
+COPY nginx.conf /etc/nginx/nginx.conf
 
 ENTRYPOINT ["docker-entrypoint.sh"]
